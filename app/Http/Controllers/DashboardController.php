@@ -12,8 +12,22 @@ class DashboardController extends Controller
     public function __invoke(Request $request): Response
     {
         return Inertia::render('Dashboard', [
-            'items' => Item::oldest()->limit(10)->get(),
+            'context' => 'latest',
             'items' => Item::latest()->limit(10)->get(),
+        ]);
+    }
+
+    public function search(Request $request): Response
+    {
+        $search = $request->input('search', '');
+
+        return Inertia::render('Dashboard', [
+            'context' => 'search',
+            'items' => Item::where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%")
+                ->with('content')
+                ->limit(10)
+                ->get(),
         ]);
     }
 }

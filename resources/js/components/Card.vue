@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { BookOpen, Download, ExternalLink } from 'lucide-vue-next';
+import { ItemData } from '@/types';
 
 defineProps<{
-    item: object
+    item: ItemData
 }>()
 
 const iconMap = {

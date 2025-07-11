@@ -10,31 +10,33 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('dashboard', DashboardController::class)
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::get('dashboard', DashboardController::class)
+        ->name('dashboard');
 
-Route::get('admin/dashboard', AdminDashboardController::class)
-    ->middleware(['auth', 'verified'])
-    ->name('admin.dashboard');
+    Route::post('dashboard', [DashboardController::class, 'search']);
 
-Route::get('admin/items', [ItemsController::class, 'index'])
-    ->name('admin.items.index')
-    ->middleware(['auth', 'verified', 'can:viewAny,App\Models\Item']);
+    Route::get('admin/dashboard', AdminDashboardController::class)
+        ->name('admin.dashboard');
 
-Route::get('admin/items/create', [ItemsController::class, 'create'])
-    ->name('admin.items.create')
-    ->middleware(['auth', 'verified', 'can:create,App\Models\Item']);
+    Route::get('admin/items', [ItemsController::class, 'index'])
+        ->name('admin.items.index')
+        ->middleware(['can:viewAny,App\Models\Item']);
 
-Route::post('admin/items', [ItemsController::class, 'store'])
-    ->middleware(['auth', 'verified', 'can:create,App\Models\Item']);
+    Route::group(['middleware' => ['can:create,App\Models\Item']], function () {
+        Route::get('admin/items/create', [ItemsController::class, 'create'])
+            ->name('admin.items.create');
 
-Route::get('admin/items/{item}/edit', [ItemsController::class, 'edit'])
-    ->name('admin.items.edit')
-    ->middleware(['auth', 'verified', 'can:update,item']);
+        Route::post('admin/items', [ItemsController::class, 'store']);
+    });
 
-Route::patch('admin/items/{item}', [ItemsController::class, 'update'])
-    ->middleware(['auth', 'verified', 'can:update,item']);
+    Route::group(['middleware' => ['can:update,item']], function () {
+        Route::get('admin/items/{item}/edit', [ItemsController::class, 'edit'])
+            ->name('admin.items.edit');
+
+        Route::patch('admin/items/{item}', [ItemsController::class, 'update']);
+    });
+});
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

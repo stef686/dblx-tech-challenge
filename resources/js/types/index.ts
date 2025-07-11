@@ -33,4 +33,22 @@ export interface User {
     updated_at: string;
 }
 
+export interface ItemData {
+    id: number;
+    name: string;
+    description?: string;
+    image_url?: string;
+    content_type?: string;
+    type_icon?: string;
+    content: ContentData[];
+}
+
+export interface ContentData {
+    id: number;
+    header?: string;
+    content?: string;
+    url?: string;
+    button_text?: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
