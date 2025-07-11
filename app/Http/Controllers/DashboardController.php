@@ -13,6 +13,7 @@ class DashboardController extends Controller
     {
         return Inertia::render('Dashboard', [
             'items' => Item::oldest()->limit(10)->get(),
+            'items' => Item::latest()->limit(10)->get(),
         ]);
     }
 }
