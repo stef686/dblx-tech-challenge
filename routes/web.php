@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             ->name('admin.items.edit');
 
         Route::patch('admin/items/{item}', [ItemsController::class, 'update']);
+        Route::delete('admin/items/{item}', [ItemsController::class, 'delete'])->name('admin.items.delete');
     });
 });
 

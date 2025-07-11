@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { defineProps, reactive } from "vue";
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Input } from '@/components/ui/input/index.js';
@@ -19,6 +19,14 @@ const form = reactive({
 
 function submit() {
     router.patch(`/admin/items/${props.item.id}`, form)
+}
+
+function deleteItem() {
+    if (!confirm('Are you sure you want to delete this item?')) {
+        return;
+    }
+
+    router.delete(`/admin/items/${props.item.id}`)
 }
 
 </script>
@@ -85,6 +93,7 @@ function submit() {
 
                             <Button type="submit">Update</Button>
 
+                            <Button :as="Link" class="bg-red-600 text-white ms-4" v-on:click="deleteItem">Delete</Button>
                         </form>
                     </div>
 
